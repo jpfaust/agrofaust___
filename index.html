@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Agro</title>
+    <style>
+        body { margin: 0; background: #7ec0ee; font-family: sans-serif; text-align: center; }
+        h1 { color: white; text-shadow: 2px 2px #333; margin: 10px; }
+        #placar { font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+        #fazenda { 
+            display: grid; 
+            grid-template-columns: repeat(4, 80px); 
+            gap: 10px; 
+            justify-content: center; 
+            margin-top: 20px;
+        }
+        .bloco { 
+            width: 80px; height: 80px; 
+            background: #5c4033; border-radius: 8px; 
+            box-shadow: 0 4px #3d2b22;
+            cursor: pointer; font-size: 30px; 
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.1s;
+        }
+        .bloco:active { transform: translateY(4px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <h1>🌱 Mini Agro Craft</h1>
+    <div id="placar">Moedas: <span id="moedas">0</span> 🪙</div>
+    
+    <div id="fazenda"></div>
+
+    <script>
+        let moedas = 0;
+        const fazenda = document.getElementById('fazenda');
+
+        // Cria os 16 blocos de terra arável
+        for (let i = 0; i < 16; i++) {
+            const bloco = document.createElement('div');
+            bloco.className = 'bloco';
+            bloco.dataset.estado = 'vazio'; // Estado inicial: sem nada
+            
+            bloco.addEventListener('click', () => {
+                // 1. Se estiver vazio, planta o broto
+                if (bloco.dataset.estado === 'vazio') {
+                    bloco.dataset.estado = 'plantado';
+                    bloco.innerText = '🌱';
+                    bloco.style.background = '#4a3319'; // Terra molhada
+                    
+                    // Cresce e vira trigo depois de 2 segundos
+                    setTimeout(() => {
+                        if (bloco.dataset.estado === 'plantado') {
+                            bloco.dataset.estado = 'pronto';
+                            bloco.innerText = '🌾';
+                        }
+                    }, 2000);
+                } 
+                // 2. Se estiver pronto, colhe e ganha moedas
+                else if (bloco.dataset.estado === 'pronto') {
+                    bloco.dataset.estado = 'vazio';
+                    bloco.innerText = '';
+                    bloco.style.background = '#5c4033'; // Volta a ser terra normal
+                    
+                    moedas += 10;
+                    document.getElementById('moedas').innerText = moedas;
+                }
+            });
+
+            fazenda.appendChild(bloco);
+        }
+    </script>
+</body>
+</html>
